@@ -1,0 +1,3 @@
+[submodule "fake_rpi"]
+	path = fake_rpi
+	url = https://github.com/ovanr/fake_rpi.git

@@ -1,0 +1,18 @@
+
+syntax = "proto3";
+
+import "sensors/raspcamdt.proto";
+import "sensors/cpudt.proto";
+
+package sensordt;
+
+message Output {
+   oneof output {
+      sensors.cpudt.Cpuout cpu = 1;
+      sensors.raspcamdt.Raspcamout cam = 2;
+   }
+}
+
+message Sensorout {
+   repeated Output outputs = 2;
+}

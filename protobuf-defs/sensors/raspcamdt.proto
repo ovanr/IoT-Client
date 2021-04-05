@@ -1,0 +1,84 @@
+
+syntax = "proto3";
+
+package sensors.raspcamdt;
+
+enum Encoding {
+    JPEG = 0;
+    PNG = 1;
+    BMP = 2;
+    GIF = 3;
+}
+
+enum Exposure {
+    EXP_OFF = 0;
+    EXP_AUTO = 1;
+    EXP_NIGHT = 2;
+    EXP_NIGHTPREVIEW = 3;
+    EXP_BACKLIGHT = 4;
+    EXP_SPOTLIGHT = 5;
+    EXP_SPORTS = 6;
+    EXP_SNOW = 7;
+    EXP_BEACH = 8;
+    EXP_VERYLONG = 9;
+    EXP_FIXEDFPS = 10;
+    EXP_ANTISHAKE = 11;
+    EXP_FIREWORKS = 12;
+}
+
+enum Awb {
+    AWB_OFF = 0;
+    AWB_AUTO = 1;
+    AWB_SUN = 2;
+    AWB_CLOUD = 3;
+    AWB_SHADE = 4;
+    AWB_TUNGSTEN = 5;
+    AWB_FLUORESCENT = 6;
+    AWB_INCANDESCENT = 7;
+    AWB_FLASH = 8;
+    AWB_HORIZON = 9;
+    AWB_GREYWORLD = 10;
+}
+
+enum Imxfx {
+    IMXFX_NONE = 0;
+    IMXFX_NEGATIVE = 1;
+    IMXFX_SOLARISE = 2;
+    IMXFX_SKETCH = 3;
+    IMXFX_DENOISE = 4;
+    IMXFX_EMBOSS = 5;
+    IMXFX_OILPAINT = 6;
+    IMXFX_HATCH = 7;
+    IMXFX_GPEN = 8;
+    IMXFX_PASTEL = 9;
+    IMXFX_WATERCOLOUR = 10;
+    IMXFX_FILM = 11;
+    IMXFX_BLUR = 12;
+    IMXFX_SATURATION = 13;
+    IMXFX_COLOURSWAP = 14;
+    IMXFX_WASHEDOUT = 15;
+    IMXFX_POSTERISE = 16;
+    IMXFX_COLOURPOINT = 17;
+    IMXFX_COLOURBALANCE = 18;
+    IMXFX_CARTOON = 19;
+}
+
+message Raspcamout {
+    Encoding encoding = 1;
+    bytes bin = 2;
+}
+
+message Raspcamopt {
+    bool vflip = 1;
+    bool hflip = 2;
+    int32 rotation = 3;
+    int32 quality = 4;
+    Encoding encoding = 5;
+    int32 sharpness = 6;
+    int32 contrast = 7;
+    int32 brightness = 8;
+    int32 saturation = 9;
+    Exposure exposure = 10;
+    Awb awb = 11;
+    Imxfx imxfx = 12;
+}

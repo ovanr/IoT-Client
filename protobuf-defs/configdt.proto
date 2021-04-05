@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "sensors/raspcamdt.proto";
+import "sensors/cpudt.proto";
+
+package configdt;
+
+message Time {
+   int32 hour = 1;
+   int32 minute = 2;
+}
+
+message Modconf {
+   sensors.raspcamdt.Raspcamopt rasp_cam = 1;
+   sensors.cpudt.Cpuopt cpu = 2;
+}
+
+message Devconf {
+   string mqtt_host = 1;
+   int32 mqtt_port = 2; 
+   string mqtt_user = 3; 
+   string mqtt_pass = 4; 
+   int32 burst_interval = 5;
+   int32 burst_count = 6;
+   repeated Time wake_on = 7;
+   Modconf sensor_conf = 8;
+}

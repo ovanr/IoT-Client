@@ -1,0 +1,14 @@
+
+syntax = "proto3";
+
+package sensors.cpudt;
+
+message Cpuopt {
+   // comment
+}
+
+message Cpuout {
+   float load = 1;
+   int32 count = 2;
+   float pkg_temp = 3;
+}

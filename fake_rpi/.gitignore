@@ -1,0 +1,11 @@
+*.pyc
+.DS_Store
+old
+*.egg-info
+build
+dist
+tmp
+._*
+.mypy_cache
+.pytest_cache
+*.lock
