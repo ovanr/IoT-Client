@@ -27,7 +27,6 @@ class Modconf(betterproto.Message):
 @dataclass
 class Devconf(betterproto.Message):
     mqtt_host: str = betterproto.string_field(1)
-    mqtt_port: int = betterproto.int32_field(2)
     mqtt_user: str = betterproto.string_field(3)
     mqtt_pass: str = betterproto.string_field(4)
     burst_interval: int = betterproto.int32_field(5)

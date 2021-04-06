@@ -7,6 +7,7 @@ import betterproto
 
 from .. import configdt
 
+
 @dataclass
 class Confupdateopt(betterproto.Message):
     perform: bool = betterproto.bool_field(1)

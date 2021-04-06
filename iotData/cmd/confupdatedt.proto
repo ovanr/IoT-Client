@@ -7,5 +7,5 @@ import "configdt.proto";
 
 message Confupdateopt {
    bool perform = 1; 
-   configdt.Devconf newConf = 2; 
+   configdt.Devconf new_conf = 2; 
 }

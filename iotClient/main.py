@@ -54,8 +54,10 @@ def mqttReceive(configPath: str):
     
     with conn.connect() as c:
         sleep(5)   
-        with lock: 
-            c.disconnect()
+        with lock:
+            # do not exit the connection unless
+            # you hold the lock
+            pass
 
 def mqttSend(configPath: str):
     with open(configPath, "r") as f:
