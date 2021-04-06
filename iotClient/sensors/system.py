@@ -16,13 +16,6 @@ class System(AbstractSensor):
         super().__init__("System")
         self.config = config
 
-    def __enter__(self) -> System:
-        return self
-
-    def __exit__(self) -> None:
-        # nothing to clean up
-        return
-
     @property
     def voltage(self) -> float:
         v = Vcgencmd().measure_volts("sdram_p")

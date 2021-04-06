@@ -1,0 +1,11 @@
+
+syntax = "proto3";
+
+package cmd.confupdatedt;
+
+import "configdt.proto";
+
+message Confupdateopt {
+   bool perform = 1; 
+   configdt.Devconf newConf = 2; 
+}

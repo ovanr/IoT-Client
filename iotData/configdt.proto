@@ -1,10 +1,10 @@
 syntax = "proto3";
 
+package configdt;
+
 import "sensors/raspcamdt.proto";
 import "sensors/cpudt.proto";
 import "sensors/systemdt.proto";
-
-package configdt;
 
 message Time {
    int32 hour = 1;
@@ -19,7 +19,6 @@ message Modconf {
 
 message Devconf {
    string mqtt_host = 1;
-   int32 mqtt_port = 2; 
    string mqtt_user = 3; 
    string mqtt_pass = 4; 
    int32 burst_interval = 5;

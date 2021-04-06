@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing     import List, Dict, Union, NamedTuple
 from abc        import abstractmethod, ABC
-from datetime   import datetime 
 
 from .sensordt  import Sensorout,Output
 

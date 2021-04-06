@@ -15,13 +15,6 @@ class Cpu(AbstractSensor):
         super().__init__("Cpu")
         self.config = config
 
-    def __enter__(self) -> Cpu:
-        return self
-
-    def __exit__(self) -> None:
-        # nothing to clean up
-        return
-
     @property
     def percent(self) -> float:
         p = psutil.cpu_percent()  

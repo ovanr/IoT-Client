@@ -64,3 +64,4 @@ typing==3.7.4.3
 urllib3==1.26.4
 virtualenv==20.4.3
 webencodings==0.5.1
+vcgencmd==0.1.1

@@ -1,0 +1,18 @@
+
+syntax = "proto3";
+
+package cmddt;
+
+import "cmd/rebootdt.proto";
+import "cmd/confupdatedt.proto";
+
+message Cmd {
+   oneof cmd {
+      cmd.rebootdt.Rebootopt reboot = 1;
+      cmd.confupdatedt.Confupdateopt conf_update = 2;
+   }
+}
+
+message Cmdin {
+   repeated Cmd cmds = 1;
+}

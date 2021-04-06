@@ -5,18 +5,12 @@ from dataclasses import dataclass
 
 import betterproto
 
-from . import configdt
+from . import cmddt
 from . import sensordt
-
-
-@dataclass
-class Command(betterproto.Message):
-    cmd: str = betterproto.string_field(1)
 
 
 @dataclass
 class Packet(betterproto.Message):
     uid: str = betterproto.string_field(1)
-    conf: configdt.Devconf = betterproto.message_field(2, group="type")
-    cmd: "Command" = betterproto.message_field(3, group="type")
+    cmds: cmddt.Cmdin = betterproto.message_field(3, group="type")
     out: sensordt.Sensorout = betterproto.message_field(4, group="type")

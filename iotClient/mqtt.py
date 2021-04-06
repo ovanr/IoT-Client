@@ -5,11 +5,12 @@ from contextlib import contextmanager
 
 from .misc      import callMany
 
-MqttCb = Callable[[mqtt.Client, None, Dict, int], None] 
+MqttOnConnectCb = Callable[[mqtt.Client, None, Dict, int], None] 
+MqttOnMessageCb = Callable[[mqtt.Client, None, mqtt.MQTTMessage], None] 
 
 class Mqtt(mqtt.Client):
-    onConnectCbs: List[MqttCb] 
-    onMessageCbs: List[MqttCb]
+    onConnectCbs: List[MqttOnConnectCb] 
+    onMessageCbs: List[MqttOnMessageCb]
 
     def __init__(self,
                  clientId: str,
@@ -29,11 +30,11 @@ class Mqtt(mqtt.Client):
                          clean_session=cleanSession, 
                          protocol=mqtt.MQTTv311)
 
-    def registerOnConnectCallback(self, cb: MqttCb) -> int:
+    def registerOnConnectCallback(self, cb: MqttOnConnectCb) -> int:
         self.onConnectCbs.append(cb)
         return len(self.onConnectCbs)
 
-    def registerOnMessageCallback(self, cb: MqttCb) -> int:
+    def registerOnMessageCallback(self, cb: MqttOnMessageCb) -> int:
         self.onMessageCbs.append(cb)
         return len(self.onMessageCbs)
     

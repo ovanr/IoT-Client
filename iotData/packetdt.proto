@@ -1,0 +1,15 @@
+
+syntax = "proto3";
+
+package packetdt;
+
+import "cmddt.proto";
+import "sensordt.proto";
+
+message Packet {
+  string uid = 1;
+  oneof type {
+     cmddt.Cmdin cmds = 3;
+     sensordt.Sensorout out = 4;
+  }
+}

@@ -5,9 +5,11 @@ from ..sensordt         import Output
 from .raspcamdt         import Raspcamopt, Raspcamout, Encoding
 
 from fake_rpi.picamera  import PiCamera
+from typing             import Iterator
 from time               import sleep
 from io                 import BytesIO
 from enum               import Enum
+from contextlib         import contextmanager
 
 def getEnumName(enum: Enum):
     name = enum.name 
@@ -21,34 +23,38 @@ class RaspCam(AbstractSensor):
     def __init__(self, config: Raspcamopt):
         super().__init__("RaspCam")
         self.config = config
-        self.cam = PiCamera(resolution="1080p")
-        self.cam.rotation = config.rotation
-        self.cam.vflip = config.vflip
-        self.cam.hflip = config.hflip
-        self.cam.contrast = config.contrast
-        self.cam.sharpness = config.sharpness
-        self.cam.brightness = config.brightness
-        self.cam.saturation = config.saturation
-        self.cam.exposure_mode = getEnumName(config.exposure)
-        self.cam.awb_mode = getEnumName(config.awb)
-        self.cam.image_effect = getEnumName(config.imxfx)
     
-    def __enter__(self) -> RaspCam:
-        self.cam.start_preview()
+    @contextmanager 
+    def camera(self) -> Iterator[PiCamera]:
+        cam = PiCamera(resolution="1080p")
+        cam.rotation = self.config.rotation
+        cam.vflip = self.config.vflip
+        cam.hflip = self.config.hflip
+        cam.contrast = self.config.contrast
+        cam.sharpness = self.config.sharpness
+        cam.brightness = self.config.brightness
+        cam.saturation = self.config.saturation
+        cam.exposure_mode = getEnumName(self.config.exposure)
+        cam.awb_mode = getEnumName(self.config.awb)
+        cam.image_effect = getEnumName(self.config.imxfx)
+        
+        cam.start_preview()
         # Camera warm-up time
         sleep(3)
-        
-        return self
 
-    def __exit__(self) -> None:
-        self.cam.close()
-        
+        try: 
+            yield cam 
+        finally:
+            cam.close()
+
     def capture(self) -> bytes:
         print('capturing...')
         stream = BytesIO() 
-        self.cam.capture(stream, 
-                         format=getEnumName(self.config.encoding),
-                         quality=self.config.quality)
+        with self.camera() as cam:
+            cam.capture(stream, 
+                        format=getEnumName(self.config.encoding),
+                        quality=self.config.quality)
+        
         stream.seek(0)
         return stream.read()
 

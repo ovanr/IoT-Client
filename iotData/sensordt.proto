@@ -1,11 +1,11 @@
 
 syntax = "proto3";
 
+package sensordt;
+
 import "sensors/cpudt.proto";
 import "sensors/raspcamdt.proto";
 import "sensors/systemdt.proto";
-
-package sensordt;
 
 message Output {
    oneof output {
