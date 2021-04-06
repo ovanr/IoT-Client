@@ -1,8 +1,9 @@
 
 syntax = "proto3";
 
-import "sensors/raspcamdt.proto";
 import "sensors/cpudt.proto";
+import "sensors/raspcamdt.proto";
+import "sensors/systemdt.proto";
 
 package sensordt;
 
@@ -10,6 +11,7 @@ message Output {
    oneof output {
       sensors.cpudt.Cpuout cpu = 1;
       sensors.raspcamdt.Raspcamout cam = 2;
+      sensors.systemdt.Systemout system = 3;
    }
 }
 

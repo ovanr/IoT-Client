@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "sensors/raspcamdt.proto";
 import "sensors/cpudt.proto";
+import "sensors/systemdt.proto";
 
 package configdt;
 
@@ -13,6 +14,7 @@ message Time {
 message Modconf {
    sensors.raspcamdt.Raspcamopt rasp_cam = 1;
    sensors.cpudt.Cpuopt cpu = 2;
+   sensors.systemdt.Systemopt system = 3;
 }
 
 message Devconf {

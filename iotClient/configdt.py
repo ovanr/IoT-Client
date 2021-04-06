@@ -8,6 +8,7 @@ import betterproto
 
 from .sensors import cpudt
 from .sensors import raspcamdt
+from .sensors import systemdt
 
 
 @dataclass
@@ -20,6 +21,7 @@ class Time(betterproto.Message):
 class Modconf(betterproto.Message):
     rasp_cam: raspcamdt.Raspcamopt = betterproto.message_field(1)
     cpu: cpudt.Cpuopt = betterproto.message_field(2)
+    system: systemdt.Systemopt = betterproto.message_field(3)
 
 
 @dataclass

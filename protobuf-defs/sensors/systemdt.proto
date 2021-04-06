@@ -1,0 +1,13 @@
+
+syntax = "proto3";
+
+package sensors.systemdt;
+
+message Systemopt {
+   // comment
+}
+
+message Systemout {
+   float voltage = 1;
+   float wifi_signal = 2;
+}

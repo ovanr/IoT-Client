@@ -1,5 +1,6 @@
 from .sensors.cpu       import Cpu
 from .sensors.raspCam   import RaspCam 
+from .sensors.system    import System 
 from .mqtt              import Mqtt
 from .packetdt          import Packet 
 from .sensor            import SensorManager
@@ -14,9 +15,11 @@ def main(configPath: str):
     
     cpuSensor = Cpu(devConf.sensor_conf.cpu)
     camSensor = RaspCam(devConf.sensor_conf.rasp_cam)
+    systemSensor = System(devConf.sensor_conf.system)
     manager = SensorManager()
     manager += cpuSensor
     manager += camSensor
+    manager += systemSensor
     
     conn = Mqtt(hostName,
                 devConf.mqtt_host,
@@ -41,4 +44,3 @@ def main(configPath: str):
     
     with conn.connect() as c:
         c.loop_forever()
-    
