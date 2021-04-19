@@ -28,7 +28,7 @@ class Mqtt(mqtt.Client):
 
         super().__init__(client_id=clientId, 
                          clean_session=cleanSession, 
-                         protocol=mqtt.MQTTv311)
+                         protocol=mqtt.MQTTv31)
 
     def registerOnConnectCallback(self, cb: MqttOnConnectCb) -> int:
         self.onConnectCbs.append(cb)
@@ -37,7 +37,20 @@ class Mqtt(mqtt.Client):
     def registerOnMessageCallback(self, cb: MqttOnMessageCb) -> int:
         self.onMessageCbs.append(cb)
         return len(self.onMessageCbs)
+
+    def subscribe(self, topic: str, qos: int) -> bool:
+        res = super().subscribe((topic, qos))
+        print(res)
+        if (res[0] == mqtt.MQTT_ERR_SUCCESS):
+            return True
+        return False 
     
+    def unsubscribe(self, topic: str) -> bool:
+        res = super().unsubscribe(topic)
+        if (res[0] == mqtt.MQTT_ERR_SUCCESS):
+            return True
+        return False 
+
     @contextmanager
     def connect(self) -> Iterator[mqtt.Client]:
         super(Mqtt, type(self)).\
@@ -53,6 +66,8 @@ class Mqtt(mqtt.Client):
         
         try:
             super().connect(self.mqttHost, self.mqttPort)
+            super().loop_start()
             yield super() 
         finally: 
+            super().loop_stop()
             super().disconnect()

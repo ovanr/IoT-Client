@@ -13,83 +13,82 @@ from .misc              import getHostName
 from .configdt          import Devconf
 
 from time               import sleep
+from functools          import partial
 import threading
 
 hostName = getHostName() 
+print("HostName:", hostName)
 
 def main(configPath: str):
-    mqttReceive(configPath)
-    mqttSend(configPath)
+    config = readConf(configPath)
+    conn   = createConn(config)
+    mqttDo(configPath, config, conn)
 
-def mqttReceive(configPath: str):
+def readConf(configPath) -> Devconf:
     with open(configPath, "r") as f:
-        devConf = Devconf().from_json(f.read())
-    
-    cmdManager = CommandManager() 
-    
-    cmdManager += Reboot()
-    cmdManager += ConfUpdate(configPath)
-    
-    lock = threading.Lock()
+        return Devconf().from_json(f.read())
 
-    # start new connection with cleanSession off
-    # in order to receive previously missed msgs
-    conn = Mqtt(hostName,
-                devConf.mqtt_host,
-                1884,
-                devConf.mqtt_user,
-                devConf.mqtt_pass,
+def createConn(config: Devconf) -> Mqtt:
+    return Mqtt(hostName,
+                config.mqtt_host,
+                1883,
+                config.mqtt_user,
+                config.mqtt_pass,
                 cleanSession=False)
 
-    def cb(c,_,m):
-        with lock:
-            print('connected', flush=True)
-            p = Packet().parse(m.payload)
-            cmdManager.performCommands(p.cmds)
+def parseCmdPacket(configPath: str, origConf: Devconf, payload: bytes) -> int:
+    cmdManager = CommandManager()
+    cmdManager += ConfUpdate(configPath, origConf)
+    cmdManager += Reboot()
 
-        # disconnect from connection as soon as cmds are performed 
-        c.disconnect()
-        
-    conn.registerOnMessageCallback(cb)
-    
-    with conn.connect() as c:
-        sleep(5)   
-        with lock:
-            # do not exit the connection unless
-            # you hold the lock
-            pass
+    p = Packet().parse(payload)
+    print("Received packet:", p)
+    return cmdManager.performCommands(p.cmds)
 
-def mqttSend(configPath: str):
-    with open(configPath, "r") as f:
-        devConf = Devconf().from_json(f.read())
-
+def createNewSensorOutPacket(devConf: Devconf) -> Packet:
     sensorManager = SensorManager()
-    sensorManager += Cpu(devConf.sensor_conf.cpu)
     sensorManager += RaspCam(devConf.sensor_conf.rasp_cam)
+    sensorManager += Cpu(devConf.sensor_conf.cpu)
     sensorManager += System(devConf.sensor_conf.system)
-    
-    conn = Mqtt(hostName,
-                devConf.mqtt_host,
-                1883,
-                devConf.mqtt_user,
-                devConf.mqtt_pass,
-                cleanSession=True)
-    
-    def cb(c,_,fl,rc):
-        print('connected', flush=True)
-        p = Packet()
-        p.uid = hostName
-        p.out = sensorManager.retrieveAllData()
-        
-        c.publish("node/" + hostName,
-                  p.SerializeToString(), 
-                  qos=1,
-                  retain=False)
 
-        # disconnect from connection as soon as msg is sent 
-        c.disconnect()
-        
-    conn.registerOnConnectCallback(cb)
+    return Packet(uid=hostName,
+                  out=sensorManager.retrieveAllData())
+
+def onMsgReceive(lock, configPath, config, conn, _,msg):
+    print('connected', flush=True)
+    with lock:
+        print("Commands performed:", 
+               parseCmdPacket(configPath, config, msg.payload))
+
+def onConnectSub(topic, conn, *args, **kwargs):
+    print("Subscribed: ",
+           topic[0],
+           conn.subscribe(topic[0], topic[1]))
+
+def mqttDo(configPath: str, config: Devconf, conn: Mqtt):
+    lock = threading.Lock()
+    topic = ("cmd/" + hostName, 1)
     
+    conn.registerOnMessageCallback(
+        partial(onMsgReceive, lock, configPath, config)
+    )
+    
+    conn.registerOnConnectCallback(
+        partial(onConnectSub, topic)
+    )
+
     with conn.connect() as c:
-        c.loop_forever()
+        # wait 5 seconds for any receiving commands 
+        sleep(5)
+        
+        with lock:
+            # config might have been updated so re-read
+            devConf = readConf(configPath)
+            print("Config read as: ", devConf)
+
+            pck = createNewSensorOutPacket(devConf)
+            print(pck)  
+            c.publish("data/" + hostName,
+                      pck.SerializeToString(), 
+                      qos=1,
+                      retain=False)

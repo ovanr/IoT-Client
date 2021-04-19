@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import betterproto
 
-from .. import configdt
+from . import configdt
 
 
 @dataclass

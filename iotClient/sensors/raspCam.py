@@ -3,18 +3,24 @@ from __future__         import annotations
 from ..sensor           import AbstractSensor
 from ..sensordt         import Output 
 from .raspcamdt         import Raspcamopt, Raspcamout, Encoding
+from .raspcamdt         import Exposure, Awb, Imxfx
 
 from fake_rpi.picamera  import PiCamera
-from typing             import Iterator
+from typing             import Iterator, Union, Optional
 from time               import sleep
 from io                 import BytesIO
 from enum               import Enum
 from contextlib         import contextmanager
 
-def getEnumName(enum: Enum):
-    name = enum.name 
+def getEnumName(enum: Union[Enum,int], class_: Optional[type] = None):
+    if isinstance(enum, int):
+        name = class_(enum).name
+    else:
+        name = enum.name 
+    
     if '_' in name:
         (_,name) = name.split('_')
+    
     return name.lower()
 
 class RaspCam(AbstractSensor):
@@ -34,9 +40,9 @@ class RaspCam(AbstractSensor):
         cam.sharpness = self.config.sharpness
         cam.brightness = self.config.brightness
         cam.saturation = self.config.saturation
-        cam.exposure_mode = getEnumName(self.config.exposure)
-        cam.awb_mode = getEnumName(self.config.awb)
-        cam.image_effect = getEnumName(self.config.imxfx)
+        cam.exposure_mode = getEnumName(self.config.exposure, Exposure)
+        cam.awb_mode = getEnumName(self.config.awb, Awb)
+        cam.image_effect = getEnumName(self.config.imxfx, Imxfx)
         
         cam.start_preview()
         # Camera warm-up time
@@ -52,7 +58,7 @@ class RaspCam(AbstractSensor):
         stream = BytesIO() 
         with self.camera() as cam:
             cam.capture(stream, 
-                        format=getEnumName(self.config.encoding),
+                        format=getEnumName(self.config.encoding, Encoding),
                         quality=self.config.quality)
         
         stream.seek(0)
