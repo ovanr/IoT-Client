@@ -87,7 +87,7 @@ def mqttDo(configPath: str, config: Devconf, conn: Mqtt):
             print("Config read as: ", devConf)
 
             pck = createNewSensorOutPacket(devConf)
-            print(pck)  
+            # print(pck)  
             c.publish("data/" + hostName,
                       pck.SerializeToString(), 
                       qos=1,

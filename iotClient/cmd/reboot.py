@@ -19,5 +19,5 @@ class Reboot(AbstractCommand):
         if not cmd.reboot.perform:
             return False
         
-        return subprocess.run(["poweroff"]).returncode == 0
+        return subprocess.run(["reboot"]).returncode == 0
 
