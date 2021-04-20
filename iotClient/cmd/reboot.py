@@ -14,10 +14,10 @@ class Reboot(AbstractCommand):
 
     def __init__(self):
         super().__init__("Reboot")
-
+    
     def perform(self, cmd: Cmd) -> bool:
         if not cmd.reboot.perform:
             return False
         
-        return subprocess.run(["sudo", "poweroff"]).returncode == 0
+        return subprocess.run(["poweroff"]).returncode == 0
 
