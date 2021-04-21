@@ -5,6 +5,7 @@ package configdt;
 import "sensors/raspcamdt.proto";
 import "sensors/cpudt.proto";
 import "sensors/systemdt.proto";
+import "sensors/genericdt.proto";
 
 message Time {
    int32 hour = 1;
@@ -15,6 +16,7 @@ message Modconf {
    sensors.raspcamdt.Raspcamopt rasp_cam = 1;
    sensors.cpudt.Cpuopt cpu = 2;
    sensors.systemdt.Systemopt system = 3;
+   sensors.genericdt.Genericopt generic = 4;
 }
 
 message Devconf {

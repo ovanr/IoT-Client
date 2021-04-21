@@ -6,12 +6,14 @@ package sensordt;
 import "sensors/cpudt.proto";
 import "sensors/raspcamdt.proto";
 import "sensors/systemdt.proto";
+import "sensors/genericdt.proto";
 
 message Output {
    oneof output {
       sensors.cpudt.Cpuout cpu = 1;
       sensors.raspcamdt.Raspcamout cam = 2;
       sensors.systemdt.Systemout system = 3;
+      sensors.genericdt.Genericout generic = 4;
    }
 }
 

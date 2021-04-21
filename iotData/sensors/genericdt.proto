@@ -1,0 +1,13 @@
+
+syntax = "proto3";
+
+package sensors.genericdt;
+
+message Genericopt {
+   // comment
+}
+
+message Genericout {
+   float value = 1;
+   string name = 2;
+}

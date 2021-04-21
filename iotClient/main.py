@@ -1,6 +1,7 @@
 from .sensors.cpu       import Cpu
 from .sensors.raspCam   import RaspCam 
 from .sensors.system    import System 
+from .sensors.generic   import Generic 
 from .cmd.reboot        import Reboot 
 from .cmd.confUpdate    import ConfUpdate 
 from .mqtt              import Mqtt
@@ -50,6 +51,7 @@ def createNewSensorOutPacket(devConf: Devconf) -> Packet:
     sensorManager += RaspCam(devConf.sensor_conf.rasp_cam)
     sensorManager += Cpu(devConf.sensor_conf.cpu)
     sensorManager += System(devConf.sensor_conf.system)
+    sensorManager += Generic(devConf.sensor_conf.generic)
 
     return Packet(uid=hostName,
                   out=sensorManager.retrieveAllData())

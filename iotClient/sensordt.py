@@ -7,6 +7,7 @@ from typing import List
 import betterproto
 
 from .sensors import cpudt
+from .sensors import genericdt
 from .sensors import raspcamdt
 from .sensors import systemdt
 
@@ -16,6 +17,7 @@ class Output(betterproto.Message):
     cpu: cpudt.Cpuout = betterproto.message_field(1, group="output")
     cam: raspcamdt.Raspcamout = betterproto.message_field(2, group="output")
     system: systemdt.Systemout = betterproto.message_field(3, group="output")
+    generic: genericdt.Genericout = betterproto.message_field(4, group="output")
 
 
 @dataclass
