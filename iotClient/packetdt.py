@@ -12,5 +12,6 @@ from . import sensordt
 @dataclass
 class Packet(betterproto.Message):
     uid: str = betterproto.string_field(1)
+    timestamp: int = betterproto.int64_field(2)
     cmds: cmddt.Cmdin = betterproto.message_field(3, group="type")
     out: sensordt.Sensorout = betterproto.message_field(4, group="type")

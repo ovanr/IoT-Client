@@ -13,6 +13,7 @@ from .sensordt          import Sensorout
 from .misc              import getHostName
 from .configdt          import Devconf
 
+from datetime           import datetime, timezone
 from time               import sleep
 from functools          import partial
 import threading
@@ -54,6 +55,7 @@ def createNewSensorOutPacket(devConf: Devconf) -> Packet:
     sensorManager += Generic(devConf.sensor_conf.generic)
 
     return Packet(uid=hostName,
+                  timestamp=int(datetime.now(timezone.utc).timestamp()),
                   out=sensorManager.retrieveAllData())
 
 def onMsgReceive(lock, configPath, config, conn, _,msg):
