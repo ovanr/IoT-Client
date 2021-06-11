@@ -5,7 +5,7 @@ from ..sensordt         import Output
 from .raspcamdt         import Raspcamopt, Raspcamout, Encoding
 from .raspcamdt         import Exposure, Awb, Imxfx
 
-from picamera  import PiCamera
+from fake_rpi.picamera  import PiCamera
 from typing             import Iterator, Union, Optional
 from time               import sleep
 from io                 import BytesIO

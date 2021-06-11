@@ -12,20 +12,27 @@ It will additionally check for any commands that it has been requested to execut
 
 ## Installation
 
-1. `pip3 install -r requirementsWithoutFakeRpi.txt`
-2. Update config file with credentials: `vim iotClient.conf`
-3. Change picamera references to point to non-mock module
-```
-sed -i -E -e 's/from(\s)*fake_rpi.picamera/from\1picamera/g' iotClient/sensors/raspCam.py 
-```
+1. `git submodule update --init --recursive fake_rpi`
+2. `python -m venv .`
+3. `source bin/activate`
+4. `cd fake_rpi`
+5. `poetry install`
+6. `pip3 install -r requirementsWithoutFakeRpi.txt`
+7. Update config file with credentials: `vim iotClient.conf`
 
-For development you might want to build the forked fake_rpi project:
-1. `cd fake_rpi`
-2. `poetry install`
-3. Change any picamera references to fake_rpi.picamera
+For development you might want to use the fake_rpi project so:
+
+8. Change any picamera references to fake_rpi.picamera
 ```
 cd ..
 sed -i -E -e 's/from(\s)*picamera/from\1fake_rpi.picamera/g' iotClient/sensors/raspCam.py 
+```
+
+For production instead use the actual picamera module:
+
+8. Change picamera references to point to non-mock module
+```
+sed -i -E -e 's/from(\s)*fake_rpi.picamera/from\1picamera/g' iotClient/sensors/raspCam.py 
 ```
 
 ## Usage
